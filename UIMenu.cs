@@ -1089,8 +1089,8 @@ namespace NativeUI
                         break;
                 }
                 _offset.Y = (65f);
-                Debug.WriteLine($"X: {x.ToString()} Y: {y.ToString()}");
-                Debug.WriteLine($"OffX: {_offset.X.ToString()} OffY: {_offset.Y.ToString()}");
+                //Debug.WriteLine($"X: {x.ToString()} Y: {y.ToString()}");
+                //Debug.WriteLine($"OffX: {_offset.X.ToString()} OffY: {_offset.Y.ToString()}");
             }
 
             Children = new Dictionary<UIMenuItem, UIMenu>();
