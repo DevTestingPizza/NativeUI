@@ -817,9 +817,9 @@ namespace NativeUI
     public delegate void ItemListEvent(UIMenuListItem sender, int newIndex);
 
     public delegate void ItemSliderEvent(UIMenuSliderItem sender, int newIndex);
-  
+
     #endregion
-    
+
     /// <summary>
     /// Base class for NativeUI. Calls the next events: OnIndexChange, OnListChanged, OnCheckboxChange, OnItemSelect, OnMenuClose, OnMenuchange.
     /// </summary>
@@ -909,6 +909,7 @@ namespace NativeUI
         private SizeF backgroundSize { get; set; }
         private SizeF drawWidth { get; set; }
         private bool reDraw = true;
+        private bool _rightAligned;
 
         internal readonly static string _selectTextLocalized = Game.GetGXTEntry("HUD_INPUT2");
         internal readonly static string _backTextLocalized = Game.GetGXTEntry("HUD_INPUT3");
@@ -952,7 +953,7 @@ namespace NativeUI
         /// Called when user selects a list item.
         /// </summary>
         public event ListSelectedEvent OnListSelect;
-      
+
         /// <summary>
         /// Called when user presses left or right, changing a slider position.
         /// </summary>
@@ -992,7 +993,8 @@ namespace NativeUI
         /// </summary>
         /// <param name="title">Title that appears on the big banner.</param>
         /// <param name="subtitle">Subtitle that appears in capital letters in a small black bar.</param>
-        public UIMenu(string title, string subtitle) : this(title, subtitle, new PointF(0, 0), "commonmenu", "interaction_bgd")
+        /// <param name="rightAligned">Moves the menu to the right side of the screen.</param>
+        public UIMenu(string title, string subtitle, bool rightAligned = false) : this(title, subtitle, new PointF(0, 0), "commonmenu", "interaction_bgd", rightAligned)
         {
         }
 
@@ -1003,7 +1005,8 @@ namespace NativeUI
         /// <param name="title">Title that appears on the big banner.</param>
         /// <param name="subtitle">Subtitle that appears in capital letters in a small black bar. Set to "" if you dont want a subtitle.</param>
         /// <param name="offset">PointF object with X and Y data for offsets. Applied to all menu elements.</param>
-        public UIMenu(string title, string subtitle, PointF offset) : this(title, subtitle, offset, "commonmenu", "interaction_bgd")
+        /// <param name="rightAligned">Moves the menu to the right side of the screen.</param>
+        public UIMenu(string title, string subtitle, PointF offset, bool rightAligned = false) : this(title, subtitle, offset, "commonmenu", "interaction_bgd", rightAligned)
         {
         }
 
@@ -1014,7 +1017,8 @@ namespace NativeUI
         /// <param name="subtitle">Subtitle that appears in capital letters in a small black bar. Set to "" if you dont want a subtitle.</param>
         /// <param name="offset">PointF object with X and Y data for offsets. Applied to all menu elements.</param>
         /// <param name="customBanner">Path to your custom texture.</param>
-        public UIMenu(string title, string subtitle, PointF offset, string customBanner) : this(title, subtitle, offset, "commonmenu", "interaction_bgd")
+        /// <param name="rightAligned">Moves the menu to the right side of the screen.</param>
+        public UIMenu(string title, string subtitle, PointF offset, string customBanner, bool rightAligned = false) : this(title, subtitle, offset, "commonmenu", "interaction_bgd", rightAligned)
         {
             _customBanner = customBanner;
         }
@@ -1028,9 +1032,67 @@ namespace NativeUI
         /// <param name="offset">PointF object with X and Y data for offsets. Applied to all menu elements.</param>
         /// <param name="spriteLibrary">Sprite library name for the banner.</param>
         /// <param name="spriteName">Sprite name for the banner.</param>
-        public UIMenu(string title, string subtitle, PointF offset, string spriteLibrary, string spriteName)
+        /// <param name="rightAligned">Moves the menu to the right side of the screen.</param>
+        public UIMenu(string title, string subtitle, PointF offset, string spriteLibrary, string spriteName, bool rightAligned)
         {
+
             _offset = offset;
+            _rightAligned = rightAligned;
+
+            if (_rightAligned)
+            {
+                var x = 0;
+                var y = 0;
+                API.GetScreenActiveResolution(ref x, ref y);
+                switch (x)
+                {
+                    case 1920:
+                        _offset.X = (x - 530f);
+                        break;
+                    case 1680:
+                        _offset.X = (x - 480f);
+                        break;
+                    case 1600:
+                        _offset.X = (x - 470f);
+                        break;
+                    case 1440:
+                        _offset.X = (x - 260f);
+                        break;
+                    case 1366:
+                        _offset.X = (x + 10f);
+                        break;
+                    case 1360:
+                        _offset.X = (x + 15f);
+                        break;
+                    case 1280:
+                        if (y >= 960)
+                        {
+                            _offset.X = (x - 485f);
+                        }
+                        else
+                        {
+                            _offset.X = (x - 150f + (y / 8));
+                        }
+
+                        break;
+                    case 1176:
+                        _offset.X = (x + 200f);
+                        break;
+                    case 1152:
+                        _offset.X = (x - 300f);
+                        break;
+                    case 1024:
+                        _offset.X = (x - 150f);
+                        break;
+                    case 800:
+                        _offset.X = (x);
+                        break;
+                }
+                _offset.Y = (65f);
+                Debug.WriteLine($"X: {x.ToString()} Y: {y.ToString()}");
+                Debug.WriteLine($"OffX: {_offset.X.ToString()} OffY: {_offset.Y.ToString()}");
+            }
+
             Children = new Dictionary<UIMenuItem, UIMenu>();
             WidthOffset = 0;
 
@@ -1042,7 +1104,7 @@ namespace NativeUI
             _mainMenu.Items.Add(Title = new UIResText(title, new PointF(215 + _offset.X, 20 + _offset.Y), 1.15f, UnknownColors.White, Font.HouseScript, UIResText.Alignment.Centered));
             if (!String.IsNullOrWhiteSpace(subtitle))
             {
-                _mainMenu.Items.Add(new UIResRectangle(new PointF(0 + offset.X, 107 + _offset.Y), new SizeF(431, 37), UnknownColors.Black));
+                _mainMenu.Items.Add(new UIResRectangle(new PointF(0 + _offset.X, 107 + _offset.Y), new SizeF(431, 37), UnknownColors.Black));
                 _mainMenu.Items.Add(Subtitle = new UIResText(subtitle, new PointF(8 + _offset.X, 110 + _offset.Y), 0.35f, UnknownColors.WhiteSmoke, 0, UIResText.Alignment.Left));
 
                 if (subtitle.StartsWith("~"))
@@ -1155,6 +1217,7 @@ namespace NativeUI
             float ratio = (float)screenw / screenh;
             float wmp = ratio * hmp;
 
+
             return new PointF((int)Math.Round(g * wmp), (int)Math.Round(g * hmp));
         }
 
@@ -1169,7 +1232,9 @@ namespace NativeUI
         {
             WidthOffset = widthOffset;
             _logo.Size = new SizeF(431 + WidthOffset, 107);
-            _mainMenu.Items[0].Position = new PointF((WidthOffset + _offset.X + 431) / 2, 20 + _offset.Y); // Title
+            _mainMenu.Items[0].Position = new PointF(((WidthOffset / 2) + _offset.X + (431 / 2)) / 1, 20 + _offset.Y); // Title
+            //_offset.X = CitizenFX.Core.UI.Screen.Resolution.Width - 600f;
+            //_mainMenu.Items[0].Position = new PointF((WidthOffset + _offset.X + (385 / 2)) / 1, 20 + _offset.Y); // Title
             _counterText.Position = new PointF(425 + _offset.X + widthOffset, 110 + _offset.Y);
             if (_mainMenu.Items.Count >= 1)
             {
@@ -1425,8 +1490,8 @@ namespace NativeUI
         public void GoLeft()
         {
             if (!(MenuItems[CurrentSelection] is UIMenuListItem) && !(MenuItems[CurrentSelection] is UIMenuSliderItem)) return;
-            
-            
+
+
             if (MenuItems[CurrentSelection] is UIMenuListItem)
             {
                 var it = (UIMenuListItem)MenuItems[CurrentSelection];
@@ -1540,7 +1605,7 @@ namespace NativeUI
                 ParentMenu.Visible = true;
                 MenuChangeEv(ParentMenu, false);
                 if (ResetCursorOnOpen)
-                    CitizenFX.Core.Native.API.SetCursorLocation(tmp.X, tmp.Y);
+                    API.SetCursorLocation(tmp.X, tmp.Y);
                 //Cursor.Position = tmp;
             }
             MenuCloseEv();
@@ -1823,7 +1888,21 @@ namespace NativeUI
 
             if (ScaleWithSafezone)
             {
-                Function.Call((Hash)0xB8A850F20A067EB6, 76, 84); // Safezone
+                if (_rightAligned)
+                {
+                    //Function.Call((Hash)0xB8A850F20A067EB6, -76, 84); // Safezone
+                    //Function.Call((Hash)0xF5A2C681787E579D, -0.1f + ((API.GetSafeZoneSize() * 10 / Screen.Resolution.Width) * 10) * 1.8, 0f, 0f, 0f); // stuff
+                }
+                else
+                {
+                    Function.Call((Hash)0xB8A850F20A067EB6, 76, 84); // Safezone
+                    Function.Call((Hash)0xF5A2C681787E579D, 0f, 0f, 0f, 0f); // stuff
+                }
+            }
+            else
+            {
+                //GetScreenResolutionMaintainRatio
+                Function.Call((Hash)0xB8A850F20A067EB6, 0, 84); // Safezone
                 Function.Call((Hash)0xF5A2C681787E579D, 0f, 0f, 0f, 0f); // stuff
             }
 
@@ -1840,7 +1919,7 @@ namespace NativeUI
             }
             else
             {
-                PointF start = ((ScaleWithSafezone) ? safe : new PointF(0, 0));
+                PointF start = ((ScaleWithSafezone) ? new PointF(safe.X + _offset.X, safe.Y + _offset.Y) : new PointF(0, 0));
 
                 //Sprite.DrawTexture(_customBanner, new PointF(start.X + _offset.X, start.Y + _offset.Y), drawWidth);
             }
