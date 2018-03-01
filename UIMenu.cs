@@ -1886,23 +1886,23 @@ namespace NativeUI
                 Function.Call(Hash.DRAW_SCALEFORM_MOVIE_FULLSCREEN, _instructionalButtonsScaleform.Handle, 255, 255, 255, 255, 0);
             // _instructionalButtonsScaleform.Render2D(); // Bug #13
 
-            if (ScaleWithSafezone)
-            {
-                if (_rightAligned)
-                {
-                    //Function.Call((Hash)0xB8A850F20A067EB6, -76, 84); // Safezone
-                    //Function.Call((Hash)0xF5A2C681787E579D, -0.1f + ((API.GetSafeZoneSize() * 10 / Screen.Resolution.Width) * 10) * 1.8, 0f, 0f, 0f); // stuff
-                }
-                else
-                {
-                    Function.Call((Hash)0xB8A850F20A067EB6, 76, 84); // Safezone
-                    Function.Call((Hash)0xF5A2C681787E579D, 0f, 0f, 0f, 0f); // stuff
-                }
-            }
-            else
+            //if (ScaleWithSafezone)
+            //{
+            //    if (_rightAligned)
+            //    {
+            //        //Function.Call((Hash)0xB8A850F20A067EB6, -76, 84); // Safezone
+            //        //Function.Call((Hash)0xF5A2C681787E579D, -0.1f + ((API.GetSafeZoneSize() * 10 / Screen.Resolution.Width) * 10) * 1.8, 0f, 0f, 0f); // stuff
+            //    }
+            //    else
+            //    {
+            //        Function.Call((Hash)0xB8A850F20A067EB6, 76, 84); // Safezone
+            //        Function.Call((Hash)0xF5A2C681787E579D, 0f, 0f, 0f, 0f); // stuff
+            //    }
+            //}
+            //else
             {
                 //GetScreenResolutionMaintainRatio
-                Function.Call((Hash)0xB8A850F20A067EB6, 0, 84); // Safezone
+                Function.Call((Hash)0xB8A850F20A067EB6, 0, 0); // Safezone
                 Function.Call((Hash)0xF5A2C681787E579D, 0f, 0f, 0f, 0f); // stuff
             }
 
