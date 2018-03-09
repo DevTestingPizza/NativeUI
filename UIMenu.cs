@@ -1046,9 +1046,6 @@ namespace NativeUI
                 API.GetScreenActiveResolution(ref x, ref y);
                 switch (x)
                 {
-                    case 1920:
-                        _offset.X = (x - 530f);
-                        break;
                     case 1680:
                         _offset.X = (x - 480f);
                         break;
@@ -1087,10 +1084,12 @@ namespace NativeUI
                     case 800:
                         _offset.X = (x);
                         break;
+                    case 1920:
+                    default:
+                        _offset.X = (x - 530f);
+                        break;
                 }
                 _offset.Y = (65f);
-                //Debug.WriteLine($"X: {x.ToString()} Y: {y.ToString()}");
-                //Debug.WriteLine($"OffX: {_offset.X.ToString()} OffY: {_offset.Y.ToString()}");
             }
 
             Children = new Dictionary<UIMenuItem, UIMenu>();
