@@ -103,7 +103,7 @@ namespace NativeUI
         /// <summary>
         /// Processes all of your visible menus' controls.
         /// </summary>
-        public void ProcessControl()
+        public async System.Threading.Tasks.Task ProcessControlAsync()
         {
             /*foreach (var menu in _menuList.Where(menu => menu.Visible)) // foreach works slower with List. Also why make a new enumerable every tick
             {
@@ -114,7 +114,7 @@ namespace NativeUI
             for (int i = 0; i < count; i++)
             {
                 if (_menuList[i].Visible)
-                    _menuList[i].ProcessControl();
+                    await _menuList[i].ProcessControlAsync();
             }
         }
 
@@ -123,7 +123,7 @@ namespace NativeUI
         /// Processes all of your visible menus' keys.
         /// </summary>
         /// <param name="key"></param>
-        public void ProcessKey(Keys key)
+        public async System.Threading.Tasks.Task ProcessKeyAsync(Keys key)
         {
             /*foreach (var menu in _menuList.Where(menu => menu.Visible))
             {
@@ -134,7 +134,7 @@ namespace NativeUI
             for (int i = 0; i < count; i++)
             {
                 if (_menuList[i].Visible)
-                    _menuList[i].ProcessKey(key);
+                   await _menuList[i].ProcessKeyAsync(key);
             }
         }
 
@@ -142,7 +142,7 @@ namespace NativeUI
         /// <summary>
         /// Processes all of your visible menus' mouses.
         /// </summary>
-        public void ProcessMouse()
+        public async System.Threading.Tasks.Task ProcessMouseAsync()
         {
             /*foreach (var menu in _menuList.Where(menu => menu.Visible))
             {
@@ -153,7 +153,7 @@ namespace NativeUI
             for (int i = 0; i < count; i++)
             {
                 if (_menuList[i].Visible)
-                    _menuList[i].ProcessMouse();
+                    await _menuList[i].ProcessMouseAsync();
             }
         }
 
@@ -190,10 +190,10 @@ namespace NativeUI
         /// <summary>
         /// Process all of your menus' functions. Call this in a tick event.
         /// </summary>
-        public void ProcessMenus()
+        public async System.Threading.Tasks.Task ProcessMenusAsync()
         {
-            ProcessControl();
-            ProcessMouse();
+            await ProcessControlAsync();
+            await ProcessMouseAsync();
             Draw();
         }
 
