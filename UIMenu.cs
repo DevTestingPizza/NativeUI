@@ -1386,15 +1386,9 @@ namespace NativeUI
         /// <summary>
         /// Go up the menu if the number of items is more than maximum items on screen.
         /// </summary>
-        public async System.Threading.Tasks.Task GoUpOverflowAsync()
+        public void GoUpOverflow()
         {
             if (Size <= MaxItemsOnScreen + 1) return;
-
-            if (Game.FPS > 70f)
-            {
-                await BaseScript.Delay((int)(Game.FPS / 1.4));
-            }
-
             if (_activeItem % MenuItems.Count <= _minItem)
             {
                 if (_activeItem % MenuItems.Count == 0)
@@ -1429,16 +1423,9 @@ namespace NativeUI
         /// <summary>
         /// Go up the menu if the number of items is less than or equal to the maximum items on screen.
         /// </summary>
-        public async System.Threading.Tasks.Task GoUpAsync()
+        public void GoUp()
         {
             if (Size > MaxItemsOnScreen + 1) return;
-
-            if (Game.FPS > 70f)
-            {
-                await BaseScript.Delay((int)(Game.FPS / 1.4));
-            }
-
-
             MenuItems[_activeItem % (MenuItems.Count)].Selected = false;
             _activeItem--;
             MenuItems[_activeItem % (MenuItems.Count)].Selected = true;
@@ -1450,16 +1437,9 @@ namespace NativeUI
         /// <summary>
         /// Go down the menu if the number of items is more than maximum items on screen.
         /// </summary>
-        public async System.Threading.Tasks.Task GoDownOverflowAsync()
+        public void GoDownOverflow()
         {
             if (Size <= MaxItemsOnScreen + 1) return;
-
-
-            if (Game.FPS > 70f)
-            {
-                await BaseScript.Delay((int)(Game.FPS / 1.4));
-            }
-
             if (_activeItem % MenuItems.Count >= _maxItem)
             {
                 if (_activeItem % MenuItems.Count == MenuItems.Count - 1)
@@ -1493,15 +1473,9 @@ namespace NativeUI
         /// <summary>
         /// Go up the menu if the number of items is less than or equal to the maximum items on screen.
         /// </summary>
-        public async System.Threading.Tasks.Task GoDownAsync()
+        public void GoDown()
         {
             if (Size > MaxItemsOnScreen + 1) return;
-
-            if (Game.FPS > 70f)
-            {
-                await BaseScript.Delay((int)(Game.FPS / 1.4));
-            }
-
             MenuItems[_activeItem % (MenuItems.Count)].Selected = false;
             _activeItem++;
             MenuItems[_activeItem % (MenuItems.Count)].Selected = true;
@@ -1513,15 +1487,10 @@ namespace NativeUI
         /// <summary>
         /// Go left on a UIMenuListItem & UIMenuSliderItem.
         /// </summary>
-        public async System.Threading.Tasks.Task GoLeftAsync()
+        public void GoLeft()
         {
             if (!(MenuItems[CurrentSelection] is UIMenuListItem) && !(MenuItems[CurrentSelection] is UIMenuSliderItem)) return;
 
-
-            if (Game.FPS > 70f)
-            {
-                await BaseScript.Delay((int)(Game.FPS / 1.4));
-            }
 
             if (MenuItems[CurrentSelection] is UIMenuListItem)
             {
@@ -1553,14 +1522,9 @@ namespace NativeUI
         /// <summary>
         /// Go right on a UIMenuListItem & UIMenuSliderItem.
         /// </summary>
-        public async System.Threading.Tasks.Task GoRightAsync()
+        public void GoRight()
         {
             if (!(MenuItems[CurrentSelection] is UIMenuListItem) && !(MenuItems[CurrentSelection] is UIMenuSliderItem)) return;
-
-            if (Game.FPS > 70f)
-            {
-                await BaseScript.Delay((int)(Game.FPS / 1.4));
-            }
 
             if (MenuItems[CurrentSelection] is UIMenuListItem)
             {
@@ -2020,7 +1984,7 @@ namespace NativeUI
         /// <summary>
         /// Process the mouse's position and check if it's hovering over any UI element. Call this in OnTick
         /// </summary>
-        public async System.Threading.Tasks.Task ProcessMouseAsync()
+        public void ProcessMouse()
         {
             if (!Visible || _justOpened || MenuItems.Count == 0 || IsUsingController || !MouseControlsEnabled)
             {
@@ -2083,7 +2047,7 @@ namespace NativeUI
                                         SelectItem();
                                         break;
                                     case 2:
-                                        await GoRightAsync();
+                                        GoRight();
                                         break;
                                 }
                             }
@@ -2115,9 +2079,9 @@ namespace NativeUI
                 if (Game.IsControlJustPressed(0, Control.Attack))
                 {
                     if (Size > MaxItemsOnScreen + 1)
-                        await GoUpOverflowAsync();
+                        GoUpOverflow();
                     else
-                        await GoUpAsync();
+                        GoUp();
                 }
             }
             else
@@ -2129,9 +2093,9 @@ namespace NativeUI
                 if (Game.IsControlJustPressed(0, Control.Attack))
                 {
                     if (Size > MaxItemsOnScreen + 1)
-                        await GoDownOverflowAsync();
+                        GoDownOverflow();
                     else
-                        await GoDownAsync();
+                        GoDown();
                 }
             }
             else
@@ -2141,10 +2105,9 @@ namespace NativeUI
         /// <summary>
         /// Process control-stroke. Call this in the OnTick event.
         /// </summary>
-        public async System.Threading.Tasks.Task ProcessControlAsync(Keys key = Keys.None)
+        public void ProcessControl(Keys key = Keys.None)
         {
             if (!Visible) return;
-            //await CitizenFX.Core.BaseScript.Delay(10);
             if (_justOpened)
             {
                 _justOpened = false;
@@ -2159,29 +2122,29 @@ namespace NativeUI
             if (IsControlBeingPressed(MenuControls.Up, key))
             {
                 if (Size > MaxItemsOnScreen + 1)
-                    await GoUpOverflowAsync();
+                    GoUpOverflow();
                 else
-                    await GoUpAsync();
+                    GoUp();
                 UpdateScaleform();
             }
 
             else if (IsControlBeingPressed(MenuControls.Down, key))
             {
                 if (Size > MaxItemsOnScreen + 1)
-                    await GoDownOverflowAsync();
+                    GoDownOverflow();
                 else
-                    await GoDownAsync();
+                    GoDown();
                 UpdateScaleform();
             }
 
             else if (IsControlBeingPressed(MenuControls.Left, key))
             {
-                await GoLeftAsync();
+                GoLeft();
             }
 
             else if (IsControlBeingPressed(MenuControls.Right, key))
             {
-                await GoRightAsync();
+                GoRight();
             }
 
             else if (HasControlJustBeenPressed(MenuControls.Select, key))
@@ -2195,13 +2158,13 @@ namespace NativeUI
         /// Process keystroke. Call this in the OnKeyDown event.
         /// </summary>
         /// <param name="key"></param>
-        public async System.Threading.Tasks.Task ProcessKeyAsync(Keys key)
+        public void ProcessKey(Keys key)
         {
             if ((from MenuControls menuControl in _menuControls
                  select new List<Keys>(_keyDictionary[menuControl].Item1))
                 .Any(tmpKeys => tmpKeys.Any(k => k == key)))
             {
-                await ProcessControlAsync(key);
+                ProcessControl(key);
             }
         }
 
