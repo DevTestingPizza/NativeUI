@@ -841,6 +841,7 @@ namespace NativeUI
 
         private bool _visible;
         private bool _buttonsEnabled = true;
+        private bool _defaultButtonsEnabled = true;
         private bool _justOpened = true;
         private bool _itemsDirty = false;
 
@@ -1250,9 +1251,10 @@ namespace NativeUI
         /// Enable or disable the instructional buttons.
         /// </summary>
         /// <param name="disable"></param>
-        public void DisableInstructionalButtons(bool disable)
+        public void DisableInstructionalButtons(bool disable, bool disableDefaultButtons = false)
         {
             _buttonsEnabled = !disable;
+            _defaultButtonsEnabled = !disableDefaultButtons;
         }
 
         /// <summary>
@@ -2177,10 +2179,14 @@ namespace NativeUI
             _instructionalButtonsScaleform.CallFunction("TOGGLE_MOUSE_BUTTONS", 0);
             _instructionalButtonsScaleform.CallFunction("CREATE_CONTAINER");
 
-            _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 0, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.PhoneSelect, 0), _selectTextLocalized);
-            _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 1, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.PhoneCancel, 0), _backTextLocalized);
+            if (_defaultButtonsEnabled)
+            {
+                _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 0, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.PhoneSelect, 0), _selectTextLocalized);
+                _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 1, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.PhoneCancel, 0), _backTextLocalized);
+            }
+            
+            int count = _defaultButtonsEnabled ? 2 : 0;
 
-            int count = 2;
             foreach (var button in _instructionalButtons.Where(button => button.ItemBind == null || MenuItems[CurrentSelection] == button.ItemBind))
             {
                 _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", count, button.GetButtonId(), button.Text);
