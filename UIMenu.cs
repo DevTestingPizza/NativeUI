@@ -1040,11 +1040,16 @@ namespace NativeUI
             _offset = offset;
             _rightAligned = rightAligned;
 
+            WidthOffset = 0;
+
             if (_rightAligned)
             {
                 var x = 0;
                 var y = 0;
                 API.GetScreenActiveResolution(ref x, ref y);
+                //if (x > 1920)
+                //    x = 1920;
+                //_offset.X = (100 / (x - 550f));
                 switch (x)
                 {
                     case 1680:
@@ -1071,7 +1076,6 @@ namespace NativeUI
                         {
                             _offset.X = (x - 150f + (y / 8));
                         }
-
                         break;
                     case 1176:
                         _offset.X = (x + 200f);
@@ -1086,15 +1090,26 @@ namespace NativeUI
                         _offset.X = (x);
                         break;
                     case 1920:
-                    default:
+                    case 2560:
                         _offset.X = (x - 530f);
                         break;
+                    case 3840:
+                        _offset.X = 1370f;
+                        break;
+                    default:
+                        _offset.X = 0;
+                        break;
+                    //case 3840:
+                    //    _offset.X = 0;
+                    //    break;
+
+                    //default:
+                    //    _offset.X = (x )
                 }
                 _offset.Y = (65f);
             }
 
             Children = new Dictionary<UIMenuItem, UIMenu>();
-            WidthOffset = 0;
 
             _instructionalButtonsScaleform = new Scaleform("instructional_buttons");
             UpdateScaleform();
@@ -2184,7 +2199,7 @@ namespace NativeUI
                 _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 0, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.PhoneSelect, 0), _selectTextLocalized);
                 _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 1, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.PhoneCancel, 0), _backTextLocalized);
             }
-            
+
             int count = _defaultButtonsEnabled ? 2 : 0;
 
             foreach (var button in _instructionalButtons.Where(button => button.ItemBind == null || MenuItems[CurrentSelection] == button.ItemBind))
