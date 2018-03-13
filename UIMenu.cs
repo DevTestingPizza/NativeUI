@@ -1047,9 +1047,6 @@ namespace NativeUI
                 var x = 0;
                 var y = 0;
                 API.GetScreenActiveResolution(ref x, ref y);
-                //if (x > 1920)
-                //    x = 1920;
-                //_offset.X = (100 / (x - 550f));
                 switch (x)
                 {
                     case 1680:
@@ -1090,21 +1087,17 @@ namespace NativeUI
                         _offset.X = (x);
                         break;
                     case 1920:
-                    case 2560:
                         _offset.X = (x - 530f);
+                        break;
+                    case 2560:
+                        _offset.X = 1400f;
                         break;
                     case 3840:
                         _offset.X = 1370f;
                         break;
                     default:
-                        _offset.X = 0;
+                        _offset.X = 0f;
                         break;
-                    //case 3840:
-                    //    _offset.X = 0;
-                    //    break;
-
-                    //default:
-                    //    _offset.X = (x )
                 }
                 _offset.Y = (65f);
             }
