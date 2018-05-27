@@ -104,8 +104,31 @@ namespace NativeUI
         /// </summary>
         public virtual void Draw()
         {
-            _rectangle.Size = new SizeF(431 + Parent.WidthOffset, 38);
-            _selectedSprite.Size = new SizeF(431 + Parent.WidthOffset, 38);
+            if (this is UIMenuHeritageCardItem)
+            {
+                if (Selected)
+                {
+                    Selected = false;
+
+                    if (Parent.CurrentSelection == 0)
+                    {
+                        Parent.CurrentSelection = Parent.MenuItems.Count - 2;
+                    }
+                    else if (Parent.CurrentSelection == Parent.MenuItems.Count - 3)
+                    {
+                        Parent.CurrentSelection = Parent.MenuItems.Count - 1;
+                    }
+                }
+                _rectangle.Size = new SizeF(431 + Parent.WidthOffset, 38 + 150);
+
+                _selectedSprite.Size = new SizeF(431 + Parent.WidthOffset, 38 + 150);
+            }
+            else
+            {
+                _rectangle.Size = new SizeF(431 + Parent.WidthOffset, 38);
+                _selectedSprite.Size = new SizeF(431 + Parent.WidthOffset, 38);
+            }
+
 
             if (Hovered && !Selected)
             {
@@ -147,7 +170,11 @@ namespace NativeUI
                 _labelText.Draw();
             }
 
-            _text.Draw();
+            if (!String.IsNullOrWhiteSpace(_text.Caption.Trim()))
+            {
+                _text.Draw();
+            }
+
         }
 
 

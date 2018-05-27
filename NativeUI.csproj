@@ -46,6 +46,7 @@
     <Compile Include="Elements\TimerBars.cs" />
     <Compile Include="Elements\UIResRectangle.cs" />
     <Compile Include="Elements\UIResText.cs" />
+    <Compile Include="Items\UIMenuHeritageCardItem.cs" />
     <Compile Include="Items\UIMenuSliderItem.cs" />
     <Compile Include="UnknownColors.cs" />
     <Compile Include="InstructionalButton.cs" />
@@ -71,8 +72,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy /Y "D:\Tom Grobbe\Documents\GitHub Repos\NativeUI(fork)\bin\Debug\NativeUI.dll" "D:\Tom Grobbe\Documents\GitHub Repos\vMenu\vMenu\NativeUI.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
