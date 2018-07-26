@@ -1044,62 +1044,149 @@ namespace NativeUI
 
             if (_rightAligned)
             {
-                var x = 0;
-                var y = 0;
+                int x = 0;
+                int y = 0;
                 API.GetScreenActiveResolution(ref x, ref y);
-                switch (x)
+
+                /// resolutions dictionary format: [y (height)][x (width)] = x offset
+                Dictionary<float, Dictionary<float, float>> resolutions = new Dictionary<float, Dictionary<float, float>>()
                 {
-                    case 1680:
-                        _offset.X = (x - 480f);
-                        break;
-                    case 1600:
-                        _offset.X = (x - 470f);
-                        break;
-                    case 1440:
-                        _offset.X = (x - 260f);
-                        break;
-                    case 1366:
-                        _offset.X = (x + 10f);
-                        break;
-                    case 1360:
-                        _offset.X = (x + 15f);
-                        break;
-                    case 1280:
-                        if (y >= 960)
-                        {
-                            _offset.X = (x - 485f);
+                    // borderless or fullscreen resolutions
+                    {1080f, new Dictionary<float, float>(){
+                        [1920f] = (1415f)
                         }
-                        else
-                        {
-                            _offset.X = (x - 150f + (y / 8));
+                    },
+                    {1050f, new Dictionary<float, float>(){
+                        [1680f] = (1680f-460f)
                         }
-                        break;
-                    case 1176:
-                        _offset.X = (x + 200f);
-                        break;
-                    case 1152:
-                        _offset.X = (x - 300f);
-                        break;
-                    case 1024:
-                        _offset.X = (x - 150f);
-                        break;
-                    case 800:
-                        _offset.X = (x);
-                        break;
-                    case 1920:
-                        _offset.X = (x - 530f);
-                        break;
-                    case 2560:
-                        _offset.X = 1400f;
-                        break;
-                    case 3840:
-                        _offset.X = 1370f;
-                        break;
-                    default:
-                        _offset.X = 0f;
-                        break;
+                    },
+                    { 1024f, new Dictionary<float, float>(){
+                        [1600f] = (1600f-420f),
+                        [1280f] = (1280f-436f)
+                        }
+                    },
+                    { 960f, new Dictionary<float, float>(){
+                        [1280f] = (1280f-348f)
+                        }
+                    },
+                    { 900f, new Dictionary<float, float>(){
+                        [1600f] = (1600f-195f),
+                        [1440f] = (1440f-222f)
+                        }
+                    },
+                    { 864f, new Dictionary<float, float>(){
+                        [1152f] = (1152f - 220f)
+                        }
+                    },
+                    { 800f, new Dictionary<float, float>(){
+                        [1280f] = (1280f-68f)
+                        }
+                    },
+                    { 768f, new Dictionary<float, float>(){
+                        [1366f] = (1366f+39f),
+                        [1360f] = (1366f+31f),
+                        [1280f] = (1280f+4f),
+                        [1024f] = (1024f-100f),
+                        }
+                    },
+                    { 720f, new Dictionary<float, float>(){
+                        [1280f] = (1280f+118f)
+                        }
+                    },
+                    { 664f, new Dictionary<float, float>(){
+                        [1176f] = (1176f+215f)
+                        }
+                    },
+                    { 600f, new Dictionary<float, float>(){
+                        [800f] = (800f+115f)
+                        }
+                    },
+
+                    // windowed-stock/special resolutions.
+                    { 1042f, new Dictionary<float, float>(){
+                        [1904f] = (1904f-438f),
+                        [1680f] = (1680f-448f)
+                        }
+                    },
+                    { 1041f, new Dictionary<float, float>(){
+                        [1904f] = (1904f-438f),
+                        [1680f] = (1680f-448f)
+                        }
+                    }
+                };
+                if (resolutions.ContainsKey((float)y) && resolutions[(float)y].ContainsKey((float)x))
+                {
+                    _offset.X = resolutions[(float)y][(float)x];
                 }
-                _offset.Y = (65f);
+                else
+                {
+                    if (x == 2560)
+                    {
+                        _offset.X = 1400f;
+                    }
+                    else if (x == 3840)
+                    {
+                        _offset.X = 1370f;
+                    }
+                    else
+                    {
+                        _offset.X = 0f;
+                    }
+                }
+
+                //switch (x)
+                //{
+                //    case 1680:
+                //        _offset.X = (x - 480f);
+                //        break;
+                //    case 1600:
+                //        _offset.X = (x - 470f);
+                //        break;
+                //    case 1440:
+                //        _offset.X = (x - 260f);
+                //        break;
+                //    case 1366:
+                //        _offset.X = (x + 10f);
+                //        break;
+                //    case 1360:
+                //        _offset.X = (x + 15f);
+                //        break;
+                //    case 1280:
+                //        if (y >= 960)
+                //        {
+                //            _offset.X = (x - 485f);
+                //        }
+                //        else
+                //        {
+                //            _offset.X = (x - 150f + (y / 8));
+                //        }
+                //        break;
+                //    case 1176:
+                //        _offset.X = (x + 200f);
+                //        break;
+                //    case 1152:
+                //        _offset.X = (x - 300f);
+                //        break;
+                //    case 1024:
+                //        _offset.X = (x - 150f);
+                //        break;
+                //    case 800:
+                //        _offset.X = (x);
+                //        break;
+                //    case 1920:
+                //        _offset.X = (x - 530f);
+                //        break;
+                //    case 2560:
+                //        _offset.X = 1400f;
+                //        break;
+                //    case 3840:
+                //        _offset.X = 1370f;
+                //        break;
+                //    default:
+                //        _offset.X = 0f;
+                //        break;
+                //}
+                _offset.Y = (35f);
             }
 
             Children = new Dictionary<UIMenuItem, UIMenu>();
@@ -1241,8 +1328,8 @@ namespace NativeUI
             WidthOffset = widthOffset;
             _logo.Size = new SizeF(431 + WidthOffset, 107);
             _mainMenu.Items[0].Position = new PointF(((WidthOffset / 2) + _offset.X + (431 / 2)) / 1, 20 + _offset.Y); // Title
-            //_offset.X = CitizenFX.Core.UI.Screen.Resolution.Width - 600f;
-            //_mainMenu.Items[0].Position = new PointF((WidthOffset + _offset.X + (385 / 2)) / 1, 20 + _offset.Y); // Title
+                                                                                                                       //_offset.X = CitizenFX.Core.UI.Screen.Resolution.Width - 600f;
+                                                                                                                       //_mainMenu.Items[0].Position = new PointF((WidthOffset + _offset.X + (385 / 2)) / 1, 20 + _offset.Y); // Title
             _counterText.Position = new PointF(425 + _offset.X + widthOffset, 110 + _offset.Y);
             if (_mainMenu.Items.Count >= 1)
             {
