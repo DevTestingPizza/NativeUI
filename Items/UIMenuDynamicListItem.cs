@@ -40,7 +40,7 @@ namespace NativeUI
             _arrowLeft = new Sprite("commonmenu", "arrowleft", new PointF(110, 105 + y), new SizeF(30, 30));
             _arrowRight = new Sprite("commonmenu", "arrowright", new PointF(280, 105 + y), new SizeF(30, 30));
             _itemText = new UIResText("", new PointF(290, y + 104), 0.35f, UnknownColors.White, Font.ChaletLondon,
-                UIResText.Alignment.Right);
+                UIResText.ScreenAlignment.Right);
 
             CurrentListItem = startingItem;
             Callback = changeCallback;
