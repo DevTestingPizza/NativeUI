@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using CitizenFX.Core.Native;
+using static CitizenFX.Core.Native.API;
 using CitizenFX.Core.UI;
 
 namespace NativeUI
@@ -21,8 +21,9 @@ namespace NativeUI
         public override void Draw(SizeF offset)
         {
             if (!Enabled) return;
-            int screenw = Screen.Resolution.Width;
-            int screenh = Screen.Resolution.Height;
+            int screenw = 0;
+            int screenh = 0;
+            GetActiveScreenResolution(ref screenw, ref screenh);
             const float height = 1080f;
             float ratio = (float)screenw / screenh;
             var width = height * ratio;
@@ -32,13 +33,14 @@ namespace NativeUI
             float x = ((Position.X + offset.Width) / width) + w * 0.5f;
             float y = ((Position.Y + offset.Height) / height) + h * 0.5f;
 
-            Function.Call(Hash.DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
+            DrawRect(x, y, w, h, Color.R, Color.G, Color.B, Color.A);
         }
 
         public static void Draw(float xPos, float yPos, int boxWidth, int boxHeight, Color color)
         {
-            int screenw = Screen.Resolution.Width;
-            int screenh = Screen.Resolution.Height;
+            int screenw = 0;
+            int screenh = 0;
+            GetActiveScreenResolution(ref screenw, ref screenh);
             const float height = 1080f;
             float ratio = (float)screenw / screenh;
             var width = height * ratio;
@@ -47,8 +49,7 @@ namespace NativeUI
             float h = boxHeight / height;
             float x = ((xPos) / width) + w * 0.5f;
             float y = ((yPos) / height) + h * 0.5f;
-
-            Function.Call(Hash.DRAW_RECT, x, y, w, h, color.R, color.G, color.B, color.A);
+            DrawRect(x, y, w, h, color.R, color.G, color.B, color.A);
         }
     }
 }

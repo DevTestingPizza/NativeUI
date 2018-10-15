@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using static CitizenFX.Core.Native.API;
 using Font = CitizenFX.Core.UI.Font;
 
 namespace NativeUI.PauseMenu
@@ -43,12 +44,11 @@ namespace NativeUI.PauseMenu
 
                 if (value)
                 {
-                    Function.Call(Hash._START_SCREEN_EFFECT, "MinigameTransitionIn", 0, true);
-
+                    StartScreenEffect("MinigameTransitionIn", 0, true);
                 }
                 else
                 {
-                    Function.Call(Hash._STOP_SCREEN_EFFECT, "MinigameTransitionIn");
+                    StopScreenEffect("MinigameTransitionIn");
                 }
             }
         }
@@ -75,22 +75,22 @@ namespace NativeUI.PauseMenu
             _sc.CallFunction("CREATE_CONTAINER");
 
 
-            _sc.CallFunction("SET_DATA_SLOT", 0, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.PhoneSelect, 0), UIMenu._selectTextLocalized);
-            _sc.CallFunction("SET_DATA_SLOT", 1, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.PhoneCancel, 0), UIMenu._backTextLocalized);
+            _sc.CallFunction("SET_DATA_SLOT", 0, GetControlInstructionalButton(2, (int)Control.PhoneSelect, 0), UIMenu._selectTextLocalized);
+            _sc.CallFunction("SET_DATA_SLOT", 1, GetControlInstructionalButton(2, (int)Control.PhoneCancel, 0), UIMenu._backTextLocalized);
 
-            _sc.CallFunction("SET_DATA_SLOT", 2, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.FrontendRb, 0), "");
-            _sc.CallFunction("SET_DATA_SLOT", 3, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.FrontendLb, 0), _browseTextLocalized);
+            _sc.CallFunction("SET_DATA_SLOT", 2, GetControlInstructionalButton(2, (int)Control.FrontendRb, 0), "");
+            _sc.CallFunction("SET_DATA_SLOT", 3, GetControlInstructionalButton(2, (int)Control.FrontendLb, 0), _browseTextLocalized);
         }
 
         public void DrawInstructionalButton(int slot, Control control, string text)
         {
-            _sc.CallFunction("SET_DATA_SLOT", slot, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)control, 0), text);
+            _sc.CallFunction("SET_DATA_SLOT", slot, GetControlInstructionalButton(2, (int)control, 0), text);
         }
 
         public void ProcessControls()
         {
             if (!Visible || TemporarilyHidden) return;
-            Function.Call(Hash.DISABLE_ALL_CONTROL_ACTIONS, 0);
+            DisableAllControlActions(0);
 
             if (Game.IsControlJustPressed(0, Control.PhoneLeft) && FocusLevel == 0)
             {
@@ -102,7 +102,7 @@ namespace NativeUI.PauseMenu
                 Tabs[Index].Focused = false;
                 Tabs[Index].Visible = true;
 
-                Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
+                PlaySoundFrontend(-1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
             }
 
             else if (Game.IsControlJustPressed(0, Control.PhoneRight) && FocusLevel == 0)
@@ -115,7 +115,7 @@ namespace NativeUI.PauseMenu
                 Tabs[Index].Focused = false;
                 Tabs[Index].Visible = true;
 
-                Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
+                PlaySoundFrontend(-1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
             }
 
             else if (Game.IsControlJustPressed(0, Control.FrontendAccept) && FocusLevel == 0)
@@ -131,9 +131,7 @@ namespace NativeUI.PauseMenu
                     Tabs[Index].JustOpened = true;
                     Tabs[Index].OnActivated();
                 }
-
-                Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
-
+                PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
             }
 
             else if (Game.IsControlJustPressed(0, Control.PhoneCancel) && FocusLevel == 1)
@@ -141,13 +139,13 @@ namespace NativeUI.PauseMenu
                 Tabs[Index].Focused = false;
                 FocusLevel = 0;
 
-                Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "BACK", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
+                PlaySoundFrontend(-1, "BACK", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
             }
 
             else if (Game.IsControlJustPressed(0, Control.PhoneCancel) && FocusLevel == 0 && CanLeave)
             {
                 Visible = false;
-                Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "BACK", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
+                PlaySoundFrontend(-1, "BACK", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
 
                 OnMenuClose?.Invoke(this, EventArgs.Empty);
             }
@@ -166,8 +164,7 @@ namespace NativeUI.PauseMenu
                     Tabs[Index].Visible = true;
 
                     FocusLevel = 0;
-
-                    Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
+                    PlaySoundFrontend(-1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
                 }
 
                 else if (Game.IsControlJustPressed(0, Control.FrontendRb))
@@ -181,8 +178,7 @@ namespace NativeUI.PauseMenu
                     Tabs[Index].Visible = true;
 
                     FocusLevel = 0;
-
-                    Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
+                    PlaySoundFrontend(-1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
                 }
             }
 
@@ -209,16 +205,15 @@ namespace NativeUI.PauseMenu
         {
             if (!Visible || TemporarilyHidden) return;
             ShowInstructionalButtons();
-            Function.Call(Hash.HIDE_HUD_AND_RADAR_THIS_FRAME);
-            Function.Call(Hash._SHOW_CURSOR_THIS_FRAME);
-
+            HideHudAndRadarThisFrame();
+            ShowCursorThisFrame();
 
             var res = UIMenu.GetScreenResolutionMaintainRatio();
             var safe = new PointF(300, 180);
             if (!HideTabs)
             {
                 new UIResText(Title, new PointF(safe.X, safe.Y - 80), 1f, UnknownColors.White, Font.ChaletComprimeCologne,
-                    UIResText.Alignment.Left)
+                    UIResText.ScreenAlignment.Left)
                 {
                     DropShadow = true,
                 }.Draw();
@@ -236,7 +231,7 @@ namespace NativeUI.PauseMenu
                 }
 
                 new UIResText(Name, new PointF((int)res.Width - safe.X - 70, safe.Y - 95), 0.7f, UnknownColors.White,
-                    Font.ChaletComprimeCologne, UIResText.Alignment.Right)
+                    Font.ChaletComprimeCologne, UIResText.ScreenAlignment.Right)
                 {
                     DropShadow = true,
                 }.Draw();
@@ -249,7 +244,7 @@ namespace NativeUI.PauseMenu
 
 
                 new UIResText(t, new PointF((int)res.Width - safe.X - 70, safe.Y - 60), 0.4f, UnknownColors.White,
-                    Font.ChaletComprimeCologne, UIResText.Alignment.Right)
+                    Font.ChaletComprimeCologne, UIResText.ScreenAlignment.Right)
                 {
                     DropShadow = true,
                 }.Draw();
@@ -261,7 +256,7 @@ namespace NativeUI.PauseMenu
                 }
 
                 new UIResText(subt, new PointF((int)res.Width - safe.X - 70, safe.Y - 40), 0.4f, UnknownColors.White,
-                    Font.ChaletComprimeCologne, UIResText.Alignment.Right)
+                    Font.ChaletComprimeCologne, UIResText.ScreenAlignment.Right)
                 {
                     DropShadow = true,
                 }.Draw();
@@ -285,7 +280,7 @@ namespace NativeUI.PauseMenu
 
                     new UIResText(Tabs[i].Title.ToUpper(), safe.AddPoints(new PointF((tabWidth / 2) + (tabWidth + 5) * i, 5)),
                         0.35f,
-                        Tabs[i].Active ? UnknownColors.Black : UnknownColors.White, Font.ChaletLondon, UIResText.Alignment.Centered)
+                        Tabs[i].Active ? UnknownColors.Black : UnknownColors.White, Font.ChaletLondon, UIResText.ScreenAlignment.Centered)
                         .Draw();
 
                     if (Tabs[i].Active)
@@ -310,7 +305,7 @@ namespace NativeUI.PauseMenu
                         else
                             FocusLevel = 0;
 
-                        Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
+                        PlaySoundFrontend(-1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
                     }
                 }
             }

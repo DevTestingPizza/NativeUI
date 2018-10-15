@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using static CitizenFX.Core.Native.API;
 using Control = CitizenFX.Core.Control;
 using Font = CitizenFX.Core.UI.Font;
 using CitizenFX.Core.UI;
@@ -1196,17 +1197,17 @@ namespace NativeUI
 
             _mainMenu = new Container(new PointF(0, 0), new SizeF(700, 500), Color.FromArgb(0, 0, 0, 0));
             _logo = new Sprite(spriteLibrary, spriteName, new PointF(0 + _offset.X, 0 + _offset.Y), new SizeF(431, 107));
-            _mainMenu.Items.Add(Title = new UIResText(title, new PointF(215 + _offset.X, 20 + _offset.Y), 1.15f, UnknownColors.White, Font.HouseScript, UIResText.Alignment.Centered));
+            _mainMenu.Items.Add(Title = new UIResText(title, new PointF(215 + _offset.X, 20 + _offset.Y), 1.15f, UnknownColors.White, Font.HouseScript, UIResText.ScreenAlignment.Centered));
             if (!String.IsNullOrWhiteSpace(subtitle))
             {
                 _mainMenu.Items.Add(new UIResRectangle(new PointF(0 + _offset.X, 107 + _offset.Y), new SizeF(431, 37), UnknownColors.Black));
-                _mainMenu.Items.Add(Subtitle = new UIResText(subtitle, new PointF(8 + _offset.X, 110 + _offset.Y), 0.35f, UnknownColors.WhiteSmoke, 0, UIResText.Alignment.Left));
+                _mainMenu.Items.Add(Subtitle = new UIResText(subtitle, new PointF(8 + _offset.X, 110 + _offset.Y), 0.35f, UnknownColors.WhiteSmoke, 0, UIResText.ScreenAlignment.Left));
 
                 if (subtitle.StartsWith("~"))
                 {
                     CounterPretext = subtitle.Substring(0, 3);
                 }
-                _counterText = new UIResText("", new PointF(425 + _offset.X, 110 + _offset.Y), 0.35f, UnknownColors.WhiteSmoke, 0, UIResText.Alignment.Right);
+                _counterText = new UIResText("", new PointF(425 + _offset.X, 110 + _offset.Y), 0.35f, UnknownColors.WhiteSmoke, 0, UIResText.ScreenAlignment.Right);
                 _extraYOffset = 37;
             }
 
@@ -1216,7 +1217,7 @@ namespace NativeUI
 
             _descriptionBar = new UIResRectangle(new PointF(_offset.X, 123), new SizeF(431, 4), UnknownColors.Black);
             _descriptionRectangle = new Sprite("commonmenu", "gradient_bgd", new PointF(_offset.X, 127), new SizeF(431, 30));
-            _descriptionText = new UIResText("Description", new PointF(_offset.X + 5, 125), 0.35f, Color.FromArgb(255, 255, 255, 255), Font.ChaletLondon, UIResText.Alignment.Left);
+            _descriptionText = new UIResText("Description", new PointF(_offset.X + 5, 125), 0.35f, Color.FromArgb(255, 255, 255, 255), Font.ChaletLondon, UIResText.ScreenAlignment.Left);
 
             _background = new Sprite("commonmenu", "gradient_bgd", new PointF(_offset.X, 144 + _offset.Y - 37 + _extraYOffset), new SizeF(290, 25));
 
@@ -1259,7 +1260,7 @@ namespace NativeUI
 
             foreach (var control in list)
             {
-                Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)control);
+                EnableControlAction(0, (int) control, true);
             }
         }
 
@@ -1269,8 +1270,9 @@ namespace NativeUI
         /// <returns></returns>
         public static SizeF GetScreenResolutionMaintainRatio()
         {
-            int screenw = Screen.Resolution.Width;
-            int screenh = Screen.Resolution.Height;
+            int screenw = 0;
+            int screenh = 0;
+            GetActiveScreenResolution(ref screenw, ref screenh);
             const float height = 1080f;
             float ratio = (float)screenw / screenh;
             var width = height * ratio;
@@ -1288,8 +1290,8 @@ namespace NativeUI
         {
             var res = GetScreenResolutionMaintainRatio();
 
-            int mouseX = (int)Math.Round(Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, (int)Control.CursorX) * res.Width);
-            int mouseY = (int)Math.Round(Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, (int)Control.CursorY) * res.Height);
+            int mouseX = (int)Math.Round(GetControlNormal(0, (int)Control.CursorX) * res.Width);
+            int mouseY = (int)Math.Round(GetControlNormal(0, (int)Control.CursorY) * res.Height);
 
             return (mouseX >= topLeft.X && mouseX <= topLeft.X + boxSize.Width)
                    && (mouseY > topLeft.Y && mouseY < topLeft.Y + boxSize.Height);
@@ -1301,14 +1303,15 @@ namespace NativeUI
         /// <returns></returns>
         public static PointF GetSafezoneBounds()
         {
-            float t = Function.Call<float>(Hash.GET_SAFE_ZONE_SIZE); // Safezone size.
+            float t = GetSafeZoneSize(); // Safezone size.
             double g = Math.Round(Convert.ToDouble(t), 2);
             g = (g * 100) - 90;
             g = 10 - g;
 
             const float hmp = 5.4f;
-            int screenw = Screen.Resolution.Width;
-            int screenh = Screen.Resolution.Height;
+            int screenw = 0;
+            int screenh = 0;
+            GetActiveScreenResolution(ref screenw, ref screenh);
             float ratio = (float)screenw / screenh;
             float wmp = ratio * hmp;
 
@@ -1918,7 +1921,7 @@ namespace NativeUI
         /// <returns>0 - Not in item at all, 1 - In label, 2 - In arrow space.</returns>
         private int IsMouseInListItemArrows(UIMenuItem item, PointF topLeft, PointF safezone) // TODO: Ability to scroll left and right
         {
-            Function.Call((Hash)0x54CE8AC98E120CAB, "jamyfafi");
+            BeginTextCommandWidth("jamyfafi");
             UIResText.AddLongString(item.Text);
             var res = GetScreenResolutionMaintainRatio();
             var screenw = res.Width;
@@ -1926,7 +1929,7 @@ namespace NativeUI
             const float height = 1080f;
             float ratio = screenw / screenh;
             var width = height * ratio;
-            int labelSize = (int)(Function.Call<float>((Hash)0x85F061DA64ED2F67, 0) * width * 0.35f);
+            int labelSize = (int)(EndTextCommandGetWidth(false) * width * 0.35f);
 
             int labelSizeX = 5 + labelSize + 10;
             int arrowSizeX = 431 - labelSizeX;
@@ -1979,7 +1982,7 @@ namespace NativeUI
                 DisEnableControls(false);
 
             if (_buttonsEnabled)
-                Function.Call(Hash.DRAW_SCALEFORM_MOVIE_FULLSCREEN, _instructionalButtonsScaleform.Handle, 255, 255, 255, 255, 0);
+                DrawScaleformMovieFullscreen(_instructionalButtonsScaleform.Handle, 255, 255, 255, 255, 0);
             // _instructionalButtonsScaleform.Render2D(); // Bug #13
 
             //if (ScaleWithSafezone)
@@ -1998,8 +2001,8 @@ namespace NativeUI
             //else
             {
                 //GetScreenResolutionMaintainRatio
-                Function.Call((Hash)0xB8A850F20A067EB6, 0, 0); // Safezone
-                Function.Call((Hash)0xF5A2C681787E579D, 0f, 0f, 0f, 0f); // stuff
+                ScreenDrawPositionBegin(0, 0);
+                ScreenDrawPositionRatio(0f, 0f, 0f, 0f);
             }
 
             if (reDraw) DrawCalculations();
@@ -2022,7 +2025,7 @@ namespace NativeUI
             _mainMenu.Draw();
             if (MenuItems.Count == 0)
             {
-                Function.Call((Hash)0xE3A3DB414A373DAB); // Safezone end
+                ScreenDrawPositionEnd(); // Safezone end
                 return;
             }
 
@@ -2074,7 +2077,7 @@ namespace NativeUI
             }
 
             if (ScaleWithSafezone)
-                Function.Call((Hash)0xE3A3DB414A373DAB); // Safezone end
+                ScreenDrawPositionEnd(); // Safezone end
         }
 
         /// <summary>
@@ -2084,10 +2087,11 @@ namespace NativeUI
         {
             if (!Visible || _justOpened || MenuItems.Count == 0 || IsUsingController || !MouseControlsEnabled)
             {
-                Function.Call(Hash.ENABLE_CONTROL_ACTION, (int)Control.LookUpDown);
-                Function.Call(Hash.ENABLE_CONTROL_ACTION, (int)Control.LookLeftRight);
-                Function.Call(Hash.ENABLE_CONTROL_ACTION, (int)Control.Aim);
-                Function.Call(Hash.ENABLE_CONTROL_ACTION, (int)Control.Attack);
+                EnableControlAction(0, (int) Control.LookUpDown, true);
+                EnableControlAction(0, (int)Control.LookLeftRight, true);
+                EnableControlAction(0, (int)Control.Aim, true);
+                EnableControlAction(0, (int)Control.Attack, true);
+
                 if (_itemsDirty)
                 {
                     MenuItems.Where(i => i.Hovered).ToList().ForEach(i => i.Hovered = false);
@@ -2097,7 +2101,7 @@ namespace NativeUI
             }
 
             PointF safezoneOffset = GetSafezoneBounds();
-            Function.Call(Hash._SHOW_CURSOR_THIS_FRAME);
+            ShowCursorThisFrame();
             int limit = MenuItems.Count - 1;
             int counter = 0;
             if (MenuItems.Count > MaxItemsOnScreen + 1)
@@ -2106,16 +2110,16 @@ namespace NativeUI
             if (IsMouseInBounds(new PointF(0, 0), new SizeF(30, 1080)) && MouseEdgeEnabled)
             {
                 GameplayCamera.RelativeHeading += 5f;
-                Function.Call(Hash._SET_CURSOR_SPRITE, 6);
+                SetCursorSprite(6);
             }
             else if (IsMouseInBounds(new PointF(Convert.ToInt32(GetScreenResolutionMaintainRatio().Width - 30f), 0), new SizeF(30, 1080)) && MouseEdgeEnabled)
             {
                 GameplayCamera.RelativeHeading -= 5f;
-                Function.Call(Hash._SET_CURSOR_SPRITE, 7);
+                SetCursorSprite(7);
             }
             else if (MouseEdgeEnabled)
             {
-                Function.Call(Hash._SET_CURSOR_SPRITE, 1);
+                SetCursorSprite(1);
             }
 
             for (int i = _minItem; i <= limit; i++)
@@ -2276,8 +2280,8 @@ namespace NativeUI
 
             if (_defaultButtonsEnabled)
             {
-                _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 0, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.PhoneSelect, 0), _selectTextLocalized);
-                _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 1, Function.Call<string>(Hash.GET_CONTROL_INSTRUCTIONAL_BUTTON, 2, (int)Control.PhoneCancel, 0), _backTextLocalized);
+                _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 0, GetControlInstructionalButton(2, (int)Control.PhoneSelect, 0), _selectTextLocalized);
+                _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 1, GetControlInstructionalButton(2, (int)Control.PhoneCancel, 0), _backTextLocalized);
             }
 
             int count = _defaultButtonsEnabled ? 2 : 0;
@@ -2308,8 +2312,11 @@ namespace NativeUI
                 UpdateScaleform();
                 if (ParentMenu != null || !value) return;
                 if (!ResetCursorOnOpen) return;
-                CitizenFX.Core.Native.API.SetCursorLocation(float.Parse(Screen.Resolution.Width.ToString()) / 2f, float.Parse(Screen.Resolution.Height.ToString()) / 2f);
-                Screen.Hud.CursorSprite = CursorSprite.Normal;
+                int screenw = 0;
+                int screenh = 0;
+                GetActiveScreenResolution(ref screenw, ref screenh);
+                SetCursorLocation(float.Parse(screenw.ToString()) / 2f, float.Parse(screenh.ToString()) / 2f);
+                SetCursorSprite((int) CursorSprite.Normal);
             }
         }
 
@@ -2342,7 +2349,7 @@ namespace NativeUI
         /// <summary>
         /// Returns false if last input was made with mouse and keyboard, true if it was made with a controller.
         /// </summary>
-        public static bool IsUsingController => !Function.Call<bool>(Hash._IS_INPUT_DISABLED, 2);
+        public static bool IsUsingController => !IsInputDisabled(2);
 
 
         /// <summary>

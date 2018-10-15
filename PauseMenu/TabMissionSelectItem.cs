@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Font = CitizenFX.Core.UI.Font;
 using CitizenFX.Core;
-using CitizenFX.Core.Native;
+using static CitizenFX.Core.Native.API;
 
 namespace NativeUI.PauseMenu
 {
@@ -97,14 +97,14 @@ namespace NativeUI.PauseMenu
 
             if (Game.IsControlJustPressed(0, Control.PhoneSelect))
             {
-                Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
+                PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
                 OnItemSelect?.Invoke(Heists[Index]);
             }
 
             if (Game.IsControlJustPressed(0, Control.FrontendUp) || Game.IsControlJustPressed(0, Control.MoveUpOnly))
             {
                 Index = (1000 - (1000 % Heists.Count) + Index - 1) % Heists.Count;
-                Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
+                PlaySoundFrontend(-1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
 
                 if (Heists.Count <= MaxItemsPerView) return;
 
@@ -124,7 +124,7 @@ namespace NativeUI.PauseMenu
             else if (Game.IsControlJustPressed(0, Control.FrontendDown) || Game.IsControlJustPressed(0, Control.MoveDownOnly))
             {
                 Index = (1000 - (1000 % Heists.Count) + Index + 1) % Heists.Count;
-                Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1);
+                PlaySoundFrontend(-1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
 
                 if (Heists.Count <= MaxItemsPerView) return;
 
@@ -188,7 +188,7 @@ namespace NativeUI.PauseMenu
 
             new UIResRectangle(new PointF((int)res.Width - SafeSize.X - 512, SafeSize.Y + 256), new SizeF(512, 40), Color.FromArgb(fullAlpha, UnknownColors.Black)).Draw();
             new UIResText(Heists[Index].Name, new PointF((int)res.Width - SafeSize.X - 4, SafeSize.Y + 260), 0.5f, Color.FromArgb(fullAlpha, UnknownColors.White),
-                Font.HouseScript, UIResText.Alignment.Right).Draw();
+                Font.HouseScript, UIResText.ScreenAlignment.Right).Draw();
 
             for (int i = 0; i < Heists[Index].ValueList.Count; i++)
             {
@@ -199,7 +199,7 @@ namespace NativeUI.PauseMenu
 
 
                 new UIResText(text, new PointF((int)res.Width - SafeSize.X - 506, SafeSize.Y + 260 + 42 + (40 * i)), 0.35f, Color.FromArgb(fullAlpha, UnknownColors.White)).Draw();
-                new UIResText(label, new PointF((int)res.Width - SafeSize.X - 6, SafeSize.Y + 260 + 42 + (40 * i)), 0.35f, Color.FromArgb(fullAlpha, UnknownColors.White), Font.ChaletLondon, UIResText.Alignment.Right).Draw();
+                new UIResText(label, new PointF((int)res.Width - SafeSize.X - 6, SafeSize.Y + 260 + 42 + (40 * i)), 0.35f, Color.FromArgb(fullAlpha, UnknownColors.White), Font.ChaletLondon, UIResText.ScreenAlignment.Right).Draw();
             }
 
             if (!string.IsNullOrEmpty(Heists[Index].Description))

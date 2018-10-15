@@ -1,9 +1,7 @@
 ﻿using System;
-
 using System.IO;
 using System.Reflection;
-using CitizenFX.Core.Native;
-using CitizenFX.Core;
+using static CitizenFX.Core.Native.API;
 using CitizenFX.Core.UI;
 using System.Drawing;
 
@@ -72,11 +70,13 @@ namespace NativeUI
         public void Draw()
         {
             if (!Visible) return;
-            if (!Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, TextureDict))
-                Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, TextureDict, true);
+            if (!HasStreamedTextureDictLoaded(TextureDict))
+                RequestStreamedTextureDict(TextureDict, true);
 
-            int screenw = Screen.Resolution.Width;
-            int screenh = Screen.Resolution.Height;
+            int screenw = 0;
+            int screenh = 0;
+            GetActiveScreenResolution(ref screenw, ref screenh);
+
             const float height = 1080f;
             float ratio = (float)screenw / screenh;
             var width = height * ratio;
@@ -87,16 +87,17 @@ namespace NativeUI
             float x = (Position.X / width) + w * 0.5f;
             float y = (Position.Y / height) + h * 0.5f;
 
-            Function.Call(Hash.DRAW_SPRITE, TextureDict, TextureName, x, y, w, h, Heading, Color.R, Color.G, Color.B, Color.A);
+            DrawSprite(TextureDict, TextureName, x, y, w, h, Heading, Color.R, Color.G, Color.B, Color.A);
         }
 
         public static void Draw(string dict, string name, int xpos, int ypos, int boxWidth, int boxHeight, float rotation, Color color)
         {
-            if (!Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, dict))
-                Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, dict, true);
+            if (!HasStreamedTextureDictLoaded(dict))
+                RequestStreamedTextureDict(dict, true);
 
-            int screenw = Screen.Resolution.Width;
-            int screenh = Screen.Resolution.Height;
+            int screenw = 0;
+            int screenh = 0;
+            GetActiveScreenResolution(ref screenw, ref screenh);
             const float height = 1080f;
             float ratio = (float)screenw / screenh;
             var width = height * ratio;
@@ -107,7 +108,7 @@ namespace NativeUI
             float x = (xpos / width) + w * 0.5f;
             float y = (ypos / height) + h * 0.5f;
 
-            Function.Call(Hash.DRAW_SPRITE, dict, name, x, y, w, h, rotation, color.R, color.G, color.B, color.A);
+            DrawSprite(dict, name, x, y, w, h, rotation, color.R, color.G, color.B, color.A);
         }
 
         /*

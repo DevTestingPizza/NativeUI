@@ -2,7 +2,7 @@
 using Font = CitizenFX.Core.UI.Font;
 using CitizenFX.Core.UI;
 using System.Drawing;
-using CitizenFX.Core.Native;
+using static CitizenFX.Core.Native.API;
 
 
 namespace NativeUI
@@ -20,13 +20,13 @@ namespace NativeUI
         {
             SizeF res = UIMenu.GetScreenResolutionMaintainRatio();
             PointF safe = UIMenu.GetSafezoneBounds();
-            new UIResText(Label, new PointF((int)res.Width - safe.X - 180, (int)res.Height - safe.Y - (30 + (4 * interval))), 0.3f, UnknownColors.White, Font.ChaletLondon, UIResText.Alignment.Right).Draw();
+            new UIResText(Label, new PointF((int)res.Width - safe.X - 180, (int)res.Height - safe.Y - (30 + (4 * interval))), 0.3f, UnknownColors.White, Font.ChaletLondon, UIResText.ScreenAlignment.Right).Draw();
 
             new Sprite("timerbars", "all_black_bg", new PointF((int)res.Width - safe.X - 298, (int)res.Height - safe.Y - (40 + (4 * interval))), new SizeF(300, 37), 0f, Color.FromArgb(180, 255, 255, 255)).Draw();
 
-            Screen.Hud.HideComponentThisFrame(HudComponent.AreaName);
-            Screen.Hud.HideComponentThisFrame(HudComponent.StreetName);
-            Screen.Hud.HideComponentThisFrame(HudComponent.VehicleName);
+            HideHudComponentThisFrame(7);
+            HideHudComponentThisFrame(9);
+            HideHudComponentThisFrame(6);
         }
     }
 
@@ -45,7 +45,7 @@ namespace NativeUI
             PointF safe = UIMenu.GetSafezoneBounds();
 
             base.Draw(interval);
-            new UIResText(Text, new PointF((int)res.Width - safe.X - 10, (int)res.Height - safe.Y - (42 + (4 * interval))), 0.5f, UnknownColors.White, Font.ChaletLondon, UIResText.Alignment.Right).Draw();
+            new UIResText(Text, new PointF((int)res.Width - safe.X - 10, (int)res.Height - safe.Y - (42 + (4 * interval))), 0.5f, UnknownColors.White, Font.ChaletLondon, UIResText.ScreenAlignment.Right).Draw();
         }
     }
 

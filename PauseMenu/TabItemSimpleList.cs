@@ -35,7 +35,7 @@ namespace NativeUI.PauseMenu
                 var item = Dictionary.ElementAt(i);
 
                 new UIResText(item.Key, new PointF(TopLeft.X + 6, TopLeft.Y + 5 + (40 * i)), 0.35f, Color.FromArgb(fullAlpha, UnknownColors.White)).Draw();
-                new UIResText(item.Value, new PointF(BottomRight.X - 6, TopLeft.Y + 5 + (40 * i)), 0.35f, Color.FromArgb(fullAlpha, UnknownColors.White), Font.ChaletLondon, UIResText.Alignment.Right).Draw();
+                new UIResText(item.Value, new PointF(BottomRight.X - 6, TopLeft.Y + 5 + (40 * i)), 0.35f, Color.FromArgb(fullAlpha, UnknownColors.White), Font.ChaletLondon, UIResText.ScreenAlignment.Right).Draw();
             }
         }
     }

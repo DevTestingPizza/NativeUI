@@ -43,14 +43,14 @@ namespace NativeUI
             Enabled = true;
 
             _rectangle = new UIResRectangle(new PointF(0, 0), new SizeF(431, 38), Color.FromArgb(20, 255, 255, 255)); // Color.FromArgb(150, 0, 0, 0)
-            _text = new UIResText(text, new PointF(8, 0), 0.33f, UnknownColors.WhiteSmoke, CitizenFX.Core.UI.Font.ChaletLondon, UIResText.Alignment.Left);
+            _text = new UIResText(text, new PointF(8, 0), 0.33f, UnknownColors.WhiteSmoke, CitizenFX.Core.UI.Font.ChaletLondon, UIResText.ScreenAlignment.Left);
             Description = description;
             _selectedSprite = new Sprite("commonmenu", "gradient_nav", new PointF(0, 0), new SizeF(431, 38));
 
             _badgeLeft = new Sprite("commonmenu", "", new PointF(0, 0), new SizeF(40, 40));
             _badgeRight = new Sprite("commonmenu", "", new PointF(0, 0), new SizeF(40, 40));
 
-            _labelText = new UIResText("", new PointF(0, 0), 0.35f) { TextAlignment = UIResText.Alignment.Right };
+            _labelText = new UIResText("", new PointF(0, 0), 0.35f) { TextAlignment = UIResText.ScreenAlignment.Right };
         }
 
 

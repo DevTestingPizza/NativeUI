@@ -2,6 +2,7 @@
 using System.Runtime.Remoting.Messaging;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using static CitizenFX.Core.Native.API;
 using System.Threading.Tasks;
 
 namespace NativeUI
@@ -21,14 +22,17 @@ namespace NativeUI
         {
             if (_sc != null) return;
             _sc = new Scaleform("MP_BIG_MESSAGE_FREEMODE");
+
             var timeout = 1000;
             var start = DateTime.Now;
-            while (!Function.Call<bool>(Hash.HAS_SCALEFORM_MOVIE_LOADED, _sc.Handle) && DateTime.Now.Subtract(start).TotalMilliseconds < timeout) await BaseScript.Delay(0);
+            while(!_sc.IsLoaded && DateTime.Now.Subtract(start).TotalMilliseconds < timeout) await BaseScript.Delay(0);
         }
 
         public void Dispose()
         {
-            Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, new OutputArgument(_sc.Handle));
+            var h = _sc.Handle;
+            SetScaleformMovieAsNoLongerNeeded(ref h);
+            _sc.Dispose();
             _sc = null;
         }
 
@@ -95,9 +99,9 @@ namespace NativeUI
             _sc.CallFunction(funcName, paremeters);
         }
 
-        internal void Update()
+        internal Task Update()
         {
-            if (_sc == null) return;
+            if (_sc == null) return Task.FromResult(0);
             _sc.Render2D();
             if (_start != 0 && Game.GameTime - _start > _timer)
             {
@@ -106,6 +110,7 @@ namespace NativeUI
                 Dispose();
             }
 
+            return Task.FromResult(0);
         }
     }
 
@@ -121,7 +126,7 @@ namespace NativeUI
 
         private async Task BigMessageThread_Tick()
         {
-            MessageInstance.Update();
+            await MessageInstance.Update();
         }
     }
 
