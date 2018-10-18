@@ -11,7 +11,6 @@ namespace NativeUI
     {
         //protected Sprite _arrowLeft;
         //protected Sprite _arrowRight;
-        protected Sprite _background = new Sprite("pause_menu_pages_char_mom_dad", "mumdadbg", new PointF(1390f, 209f), new SizeF(481f, 228f));
         //protected Sprite _background = new Sprite("pause_menu_pages_char_mom_dad", "mumdadbg", new PointF(1390f, 215f), new SizeF(481f, 210f));
 
         //protected UIResRectangle _rectangleBackground;
@@ -30,7 +29,19 @@ namespace NativeUI
         public int Mom
         {
             get { return mom; }
-            set { mom = value; _mom.TextureName = $"Female_{value}"; }
+            set
+            {
+                mom = value;
+                if (value <= 20)
+                {
+                    _mom.TextureName = $"female_{value}";
+                }
+                else
+                {
+                    _mom.TextureName = $"special_female_{value - 21}";
+                }
+
+            }
         }
 
         /// <summary>
@@ -39,11 +50,27 @@ namespace NativeUI
         public int Dad
         {
             get { return dad; }
-            set { dad = value; _dad.TextureName = $"Male_{value}"; }
-        }
+            set
+            {
+                dad = value;
+                if (value <= 20)
+                {
+                    _dad.TextureName = $"male_{value}";
+                }
+                else
+                {
+                    _dad.TextureName = $"special_male_{value - 21}";
+                }
 
-        public Sprite _mom = new Sprite("CHAR_CREATOR_PORTRAITS", "Female_0", new PointF(1420f, 209f), new SizeF(228f, 228f));
-        public Sprite _dad = new Sprite("CHAR_CREATOR_PORTRAITS", "Male_0", new PointF(1420f + 190f, 209f), new SizeF(228f, 228f));
+            }
+        }
+        private const float _x = 1420f;
+        private const float _xOff = 25f;
+        private const float _yOff = -30f;
+        public Sprite _mom = new Sprite("CHAR_CREATOR_PORTRAITS", "Female_0", new PointF(_x + _xOff, 209f + _yOff), new SizeF(228f, 228f));
+        public Sprite _dad = new Sprite("CHAR_CREATOR_PORTRAITS", "Male_0", new PointF(_x + 190f + _xOff, 209f + _yOff), new SizeF(228f, 228f));
+
+        protected Sprite _background = new Sprite("pause_menu_pages_char_mom_dad", "mumdadbg", new PointF(1390f + _xOff, 209f + _yOff), new SizeF(481f, 228f));
 
         public UIMenuHeritageCardItem(int mom, int dad) : base(" ")
         {
