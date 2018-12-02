@@ -2292,6 +2292,20 @@ namespace NativeUI
                 count++;
             }
             _instructionalButtonsScaleform.CallFunction("DRAW_INSTRUCTIONAL_BUTTONS", -1);
+
+            if (MenuItems.Count != 0 && !String.IsNullOrWhiteSpace(MenuItems[_activeItem % (MenuItems.Count)].Description))
+            {
+                RecaulculateDescriptionPosition();
+
+                string descCaption = MenuItems[_activeItem % (MenuItems.Count)].Description;
+
+                if (FormatDescriptions) _descriptionText.Caption = FormatDescription(descCaption);
+                else _descriptionText.Caption = descCaption;
+
+                int numLines = _descriptionText.Caption.Split('\n').Length;
+
+                _descriptionRectangle.Size = new SizeF(431 + WidthOffset, (numLines * 25) + 15);
+            }
         }
 
         #endregion
