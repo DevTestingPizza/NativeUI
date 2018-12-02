@@ -105,44 +105,44 @@ namespace NativeUI
         /// </summary>
         public virtual void Draw()
         {
-            if (this is UIMenuHeritageCardItem)
-            {
-                //if (Selected)
-                //{
-                //    Selected = false;
+            //if (this is UIMenuHeritageCardItem)
+            //{
+            //    //if (Selected)
+            //    //{
+            //    //    Selected = false;
 
-                //    if (Parent.CurrentSelection == 0)
-                //    {
-                //        Parent.CurrentSelection++; //= Parent.MenuItems.Count + 2;
-                //    }
-                //    //else if (Parent.CurrentSelection == Parent.MenuItems.Count - 1)
-                //    //{
-                //    //    Parent.CurrentSelection = Parent.MenuItems.Count - 1;
-                //    //}
-                //}
-                _rectangle.Size = new SizeF(431 + Parent.WidthOffset, 38 + 150);
-                _selectedSprite.Size = new SizeF(431 + Parent.WidthOffset, 38 + 150);
-            }
-            else
-            {
-                bool heritage = false;
-                foreach (var m in this.Parent.MenuItems)
-                {
-                    if (m is UIMenuHeritageCardItem)
-                    {
-                        heritage = true;
-                        break;
-                    }
-                }
-                if (heritage)
-                {
-                    //this.Position(150);
-                    this.Offset = new PointF(this.Offset.X, 228f);
-                    //this.Offset.Y + 150f;
-                }
-                _rectangle.Size = new SizeF(431 + Parent.WidthOffset, 38);
-                _selectedSprite.Size = new SizeF(431 + Parent.WidthOffset, 38);
-            }
+            //    //    if (Parent.CurrentSelection == 0)
+            //    //    {
+            //    //        Parent.CurrentSelection++; //= Parent.MenuItems.Count + 2;
+            //    //    }
+            //    //    //else if (Parent.CurrentSelection == Parent.MenuItems.Count - 1)
+            //    //    //{
+            //    //    //    Parent.CurrentSelection = Parent.MenuItems.Count - 1;
+            //    //    //}
+            //    //}
+            //    _rectangle.Size = new SizeF(431 + Parent.WidthOffset, 38 + 150);
+            //    _selectedSprite.Size = new SizeF(431 + Parent.WidthOffset, 38 + 150);
+            //}
+            //else
+            //{
+            //bool heritage = false;
+            //foreach (var m in this.Parent.MenuItems)
+            //{
+            //    if (m is UIMenuHeritageCardItem)
+            //    {
+            //        heritage = true;
+            //        break;
+            //    }
+            //}
+            //if (heritage)
+            //{
+            //    //this.Position(150);
+            //    this.Offset = new PointF(this.Offset.X, 228f);
+            //    //this.Offset.Y + 150f;
+            //}
+            _rectangle.Size = new SizeF(431 + Parent.WidthOffset, 38);
+            _selectedSprite.Size = new SizeF(431 + Parent.WidthOffset, 38);
+            //}
 
 
             if (Hovered && !Selected)

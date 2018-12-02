@@ -1458,19 +1458,6 @@ namespace NativeUI
             safe = GetSafezoneBounds();
 
             backgroundSize = Size > MaxItemsOnScreen + 1 ? new SizeF(431 + WidthOffset, 38 * (MaxItemsOnScreen + 1)) : new SizeF(431 + WidthOffset, 38 * Size);
-            bool heritage = false;
-            foreach (var item in this.MenuItems)
-            {
-                if (item is UIMenuHeritageCardItem)
-                {
-                    heritage = true;
-                    break;
-                }
-            }
-            if (heritage)
-            {
-                backgroundSize = new SizeF(backgroundSize.Width, backgroundSize.Height + 228f - 35f);
-            }
 
             _extraRectangleUp.Size = new SizeF(431 + WidthOffset, 18);
 
@@ -1492,12 +1479,6 @@ namespace NativeUI
                 int numLines = _descriptionText.Caption.Split('\n').Length;
 
                 _descriptionRectangle.Size = new SizeF(431 + WidthOffset, (numLines * 25) + 15);
-            }
-            if (heritage)
-            {
-                _descriptionRectangle.Position = new PointF(_descriptionRectangle.Position.X, _descriptionRectangle.Position.Y + 228f - 35f);
-                _descriptionText.Position = new PointF(_descriptionText.Position.X, _descriptionText.Position.Y + 228f - 35f);
-                _descriptionBar.Position = new PointF(_descriptionBar.Position.X, _descriptionBar.Position.Y + 228f - 35f);
             }
         }
 
