@@ -936,6 +936,7 @@ namespace NativeUI
         public bool FormatDescriptions = true;
         public bool MouseControlsEnabled = true;
         public bool ScaleWithSafezone = true;
+        public bool AlwaysShowMenuItemCounter = false;
 
         #endregion
 
@@ -2050,6 +2051,13 @@ namespace NativeUI
                     item.Position(count * 38 - 37 + _extraYOffset);
                     item.Draw();
                     count++;
+                }
+
+                if (AlwaysShowMenuItemCounter && _counterText != null)
+                {
+                    string cap = (CurrentSelection + 1) + " / " + Size;
+                    _counterText.Caption = CounterPretext + cap;
+                    _counterText.Draw();
                 }
             }
             else
