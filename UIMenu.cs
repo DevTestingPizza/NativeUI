@@ -930,12 +930,12 @@ namespace NativeUI
 
         public List<UIMenuItem> MenuItems = new List<UIMenuItem>();
 
-        public bool MouseEdgeEnabled = true;
-        public bool ControlDisablingEnabled = true;
+        public bool MouseEdgeEnabled = false;
+        public bool ControlDisablingEnabled = false;
         public bool ResetCursorOnOpen = true;
         public bool FormatDescriptions = true;
-        public bool MouseControlsEnabled = true;
-        public bool ScaleWithSafezone = true;
+        public bool MouseControlsEnabled = false;
+        public bool ScaleWithSafezone = false;
         public bool AlwaysShowMenuItemCounter = false;
 
         #endregion
