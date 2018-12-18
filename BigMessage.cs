@@ -12,6 +12,7 @@ namespace NativeUI
         private Scaleform _sc;
         private int _start;
         private int _timer;
+        private bool _hasAnimatedOut;
 
         public BigMessageHandler()
         {
@@ -23,6 +24,7 @@ namespace NativeUI
             if (_sc != null) return;
             _sc = new Scaleform("MP_BIG_MESSAGE_FREEMODE");
 
+            
             var timeout = 1000;
             var start = DateTime.Now;
             while(!_sc.IsLoaded && DateTime.Now.Subtract(start).TotalMilliseconds < timeout) await BaseScript.Delay(0);
@@ -42,6 +44,7 @@ namespace NativeUI
             _start = Game.GameTime;
             _sc.CallFunction("SHOW_MISSION_PASSED_MESSAGE", msg, "", 100, true, 0, true);
             _timer = time;
+            _hasAnimatedOut = false;
         }
 
         public async void ShowColoredShard(string msg, string desc, HudColor textColor, HudColor bgColor, int time = 5000)
@@ -50,6 +53,7 @@ namespace NativeUI
             _start = Game.GameTime;
             _sc.CallFunction("SHOW_SHARD_CENTERED_MP_MESSAGE", msg, desc, (int)bgColor, (int)textColor);
             _timer = time;
+            _hasAnimatedOut = false;
         }
 
         public async void ShowOldMessage(string msg, int time = 5000)
@@ -58,6 +62,7 @@ namespace NativeUI
             _start = Game.GameTime;
             _sc.CallFunction("SHOW_MISSION_PASSED_MESSAGE", msg);
             _timer = time;
+            _hasAnimatedOut = false;
         }
 
         public async void ShowSimpleShard(string title, string subtitle, int time = 5000)
@@ -66,6 +71,7 @@ namespace NativeUI
             _start = Game.GameTime;
             _sc.CallFunction("SHOW_SHARD_CREW_RANKUP_MP_MESSAGE", title, subtitle);
             _timer = time;
+            _hasAnimatedOut = false;
         }
 
         public async void ShowRankupMessage(string msg, string subtitle, int rank, int time = 5000)
@@ -74,6 +80,7 @@ namespace NativeUI
             _start = Game.GameTime;
             _sc.CallFunction("SHOW_BIG_MP_MESSAGE", msg, subtitle, rank, "", "");
             _timer = time;
+            _hasAnimatedOut = false;
         }
 
         public async void ShowWeaponPurchasedMessage(string bigMessage, string weaponName, WeaponHash weapon, int time = 5000)
@@ -82,6 +89,7 @@ namespace NativeUI
             _start = Game.GameTime;
             _sc.CallFunction("SHOW_WEAPON_PURCHASED", bigMessage, weaponName, unchecked((int)weapon), "", 100);
             _timer = time;
+            _hasAnimatedOut = false;
         }
 
         public async void ShowMpMessageLarge(string msg, int time = 5000)
@@ -91,12 +99,14 @@ namespace NativeUI
             _sc.CallFunction("SHOW_CENTERED_MP_MESSAGE_LARGE", msg, "test", 100, true, 100);
             _sc.CallFunction("TRANSITION_IN");
             _timer = time;
+            _hasAnimatedOut = false;
         }
 
         public async void ShowCustomShard(string funcName, params object[] paremeters)
         {
             await Load();
             _sc.CallFunction(funcName, paremeters);
+            _hasAnimatedOut = false;
         }
 
         internal Task Update()
@@ -105,9 +115,18 @@ namespace NativeUI
             _sc.Render2D();
             if (_start != 0 && Game.GameTime - _start > _timer)
             {
-                _sc.CallFunction("TRANSITION_OUT");
-                _start = 0;
-                Dispose();
+                if (!_hasAnimatedOut)
+                {
+                    _sc.CallFunction("TRANSITION_OUT");
+                    _hasAnimatedOut = true;
+                    _timer += 750;
+                }
+                else
+                {
+                    _start = 0;
+                    Dispose();
+                    _sc = null;
+                }
             }
 
             return Task.FromResult(0);
